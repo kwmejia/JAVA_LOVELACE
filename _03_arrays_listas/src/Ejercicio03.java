@@ -68,12 +68,17 @@ public class Ejercicio03 {
                 case 3: //Lista de asientos disponibles
                     System.out.println("Lista de asientos disponibles (fila-asiento)");
                     for (int i = 0; i < listaAsientos.length; i++) {
-                        System.out.print("FILA #"+ (i+1)+"\n");
+
+                        System.out.print((i+1)+"\t");
+
+                        System.out.print("\n"+ (i+1));
                         for (int j = 0; j < listaAsientos[i].length; j++) {
 
                             //Si el asiento es falso = esta disponible
-                            if (!listaAsientos[i][j]){
-                                System.out.println("("+(i+1)+"-"+(j+1)+")✅");
+                            if (!listaAsientos[i][j]) {
+                                System.out.print("✅\t");
+                            } else {
+                                System.out.print("❌\t");
                             }
                         }
                     }
@@ -81,20 +86,20 @@ public class Ejercicio03 {
 
 
                 case 4: //Contabilizar total disponibles y reservadas
-                    int disponibles=0, reservadas=0;
+                    int disponibles = 0, reservadas = 0;
 
-                    for (boolean[] filaAsiento : listaAsientos){
-                      for (boolean asientoDisponible : filaAsiento){
-                          if (!asientoDisponible){
-                              disponibles++;
-                          }else {
-                              reservadas++;
-                          }
-                      }
+                    for (boolean[] filaAsiento : listaAsientos) {
+                        for (boolean asientoDisponible : filaAsiento) {
+                            if (!asientoDisponible) {
+                                disponibles++;
+                            } else {
+                                reservadas++;
+                            }
+                        }
                     }
 
-                    System.out.println("Asientos diponibles:"+ disponibles);
-                    System.out.println("Asientos reservados:"+ reservadas);
+                    System.out.println("Asientos diponibles:" + disponibles);
+                    System.out.println("Asientos reservados:" + reservadas);
                     break;
             }
 
