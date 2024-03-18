@@ -5,5 +5,10 @@ public class Cuadrado extends Rectangulo{
         super(lado,lado);
     }
 
+    @Override
+    public String perimetro() {
+        return "el perimetro es:"+ super.perimetro();
+    }
+
 
 }
