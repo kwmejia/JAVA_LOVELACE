@@ -16,7 +16,47 @@ public class CoderModel implements CRUD {
 
     @Override
     public Object insert(Object obj) {
-        return null;
+
+        //1. Abrimos la conexión
+        Connection objConnection = ConfigDB.openConnection();
+
+        //2. Convertir el obj que llegó a Coder
+        Coder objCoder =(Coder) obj;
+
+        try {
+            //3. Escribir el SQl
+            String sql = "INSERT INTO coder (name,age,clan) VALUES (?,?,?);";
+
+            //4. Preparar el Statement, además agregar la propiedad  RETURN_GENERATED_KEYS que hace que la sentencia SQL nos retorne los id generados por la Base de datos
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
+
+            //5. Asignar valor a los ? ? ?
+            objPrepare.setString(1,objCoder.getName());
+            objPrepare.setInt(2,objCoder.getAge());
+            objPrepare.setString(3,objCoder.getClan());
+
+            //6. Ejecutar el Query
+            objPrepare.execute();
+
+            //7. Obtener el resultado con los id (LLaves generadas)
+            ResultSet objRest = objPrepare.getGeneratedKeys();
+
+            //8. Iterar mientras haya un registro
+            while (objRest.next()){
+                //Podemos obtener el valor tambien con indices
+                objCoder.setId(objRest.getInt(1));
+            }
+
+            JOptionPane.showMessageDialog(null, "Coder insertion was  successful.");
+
+        }catch (SQLException e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+
+        }
+
+        ConfigDB.closeConnection();
+
+        return objCoder;
     }
 
     @Override
