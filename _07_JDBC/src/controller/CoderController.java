@@ -7,20 +7,33 @@ import javax.swing.*;
 
 public class CoderController {
 
-    public static void getAll(){
+    public static void getAll() {
         CoderModel objModel = new CoderModel();
         String listCoders = "🤷‍♂️ CODER LIST \n";
 
-        for (Object iterador: objModel.findAll()){
+        for (Object iterador : objModel.findAll()) {
             //Convertimos del Object a Coder
             Coder objCoder = (Coder) iterador;
-            listCoders+= objCoder.toString() + "\n";
+            listCoders += objCoder.toString() + "\n";
         }
 
-        JOptionPane.showMessageDialog(null,listCoders);
+        JOptionPane.showMessageDialog(null, listCoders);
     }
 
-    public static void create(){
+    public static String getAllString() {
+        CoderModel objModel = new CoderModel();
+        String listCoders = "🤷‍♂️ CODER LIST \n";
+
+        for (Object iterador : objModel.findAll()) {
+            //Convertimos del Object a Coder
+            Coder objCoder = (Coder) iterador;
+            listCoders += objCoder.toString() + "\n";
+        }
+
+        return listCoders;
+    }
+
+    public static void create() {
         //Usamos el modelo
         CoderModel objCoderModel = new CoderModel();
 
@@ -39,5 +52,38 @@ public class CoderController {
         objCoder = (Coder) objCoderModel.insert(objCoder);
 
         JOptionPane.showMessageDialog(null, objCoder.toString());
+    }
+
+    public static void delete() {
+        CoderModel objCoderModel = new CoderModel();
+
+        String listCoders = getAllString();
+
+        int idDelete = Integer.parseInt(JOptionPane.showInputDialog(listCoders + "\n Enter the Id the coder to delete: "));
+
+        Coder objCoder = objCoderModel.findById(idDelete);
+
+
+        if (objCoder== null){
+            JOptionPane.showMessageDialog(null,"Coder not found");
+        }else {
+            int confirm = JOptionPane.showConfirmDialog(null,"Are you sure want  to delete the  coder ? \n"+ objCoder.toString());
+
+            if (confirm == 0) objCoderModel.delete(objCoder);
+
+        }
+    }
+
+    public static void getByName(){
+        String name = JOptionPane.showInputDialog("Insert name ");
+        CoderModel objModel = new CoderModel();
+
+        String listaString = "COINCIDENCIAS \n";
+        for (Coder iterador: objModel.findByName(name)){
+            listaString += iterador.toString() + "\n";
+        }
+
+        JOptionPane.showMessageDialog(null, listaString);
+
     }
 }

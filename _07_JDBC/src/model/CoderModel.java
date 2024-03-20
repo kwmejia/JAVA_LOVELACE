@@ -145,7 +145,39 @@ public class CoderModel implements CRUD {
         return isDeleted;
     }
 
-    public Coder findById(int id){
+    public List<Coder> findByName(String name) {
+        //Creamos la lista
+        List<Coder> listCoder = new ArrayList<>();
+        //Abrimos la conexión
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            //Sentencia SQL
+            String slq = "SELECT * FROM coder WHERE name LIKE ?;";
+            //Preparar el statement
+            PreparedStatement objPrepare = objConnection.prepareStatement(slq);
+            objPrepare.setString(1,"%"+name+"%");
+
+            ResultSet objResult = objPrepare.executeQuery();
+
+            while (objResult.next()){
+                Coder objCoder = new Coder();
+                objCoder.setId(objResult.getInt("id"));
+                objCoder.setName(objResult.getString("name"));
+                objCoder.setClan(objResult.getString("clan"));
+                objCoder.setAge(objResult.getInt("age"));
+
+                listCoder.add(objCoder);
+            }
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+
+        ConfigDB.closeConnection();
+        return listCoder;
+    }
+
+    public Coder findById(int id) {
         //1. Abrimos la conexion
         Connection objConnection = ConfigDB.openConnection();
         //2. Crear el coder que vamos retornar
@@ -158,11 +190,11 @@ public class CoderModel implements CRUD {
             PreparedStatement objPrepare = objConnection.prepareStatement(sql);
 
             //5. Darle valor al paremetro del query
-            objPrepare.setInt(1,id);
+            objPrepare.setInt(1, id);
 
             //6. Ejecutamos el Query
             ResultSet objResult = objPrepare.executeQuery();
-            if (objResult.next()){
+            if (objResult.next()) {
                 objCoder = new Coder();
                 objCoder.setAge(objResult.getInt("age"));
                 objCoder.setName(objResult.getString("name"));
@@ -170,8 +202,8 @@ public class CoderModel implements CRUD {
                 objCoder.setId(objResult.getInt("id"));
             }
 
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null,e.getMessage());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
 
         //7.Cerrar la conexión
