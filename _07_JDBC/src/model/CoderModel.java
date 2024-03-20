@@ -21,19 +21,19 @@ public class CoderModel implements CRUD {
         Connection objConnection = ConfigDB.openConnection();
 
         //2. Convertir el obj que llegó a Coder
-        Coder objCoder =(Coder) obj;
+        Coder objCoder = (Coder) obj;
 
         try {
             //3. Escribir el SQl
             String sql = "INSERT INTO coder (name,age,clan) VALUES (?,?,?);";
 
             //4. Preparar el Statement, además agregar la propiedad  RETURN_GENERATED_KEYS que hace que la sentencia SQL nos retorne los id generados por la Base de datos
-            PreparedStatement objPrepare = objConnection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
             //5. Asignar valor a los ? ? ?
-            objPrepare.setString(1,objCoder.getName());
-            objPrepare.setInt(2,objCoder.getAge());
-            objPrepare.setString(3,objCoder.getClan());
+            objPrepare.setString(1, objCoder.getName());
+            objPrepare.setInt(2, objCoder.getAge());
+            objPrepare.setString(3, objCoder.getClan());
 
             //6. Ejecutar el Query
             objPrepare.execute();
@@ -42,15 +42,15 @@ public class CoderModel implements CRUD {
             ResultSet objRest = objPrepare.getGeneratedKeys();
 
             //8. Iterar mientras haya un registro
-            while (objRest.next()){
+            while (objRest.next()) {
                 //Podemos obtener el valor tambien con indices
                 objCoder.setId(objRest.getInt(1));
             }
 
             JOptionPane.showMessageDialog(null, "Coder insertion was  successful.");
 
-        }catch (SQLException e){
-            JOptionPane.showMessageDialog(null,e.getMessage());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
 
         }
 
@@ -79,7 +79,7 @@ public class CoderModel implements CRUD {
             ResultSet objResult = objPrepare.executeQuery();
 
             // 6. Mientras haya un resultado siguiente hacer:
-            while (objResult.next()){
+            while (objResult.next()) {
 
                 // 6.1 Crear un coder
                 Coder objCoder = new Coder();
@@ -94,7 +94,7 @@ public class CoderModel implements CRUD {
                 listCoders.add(objCoder);
             }
 
-        }catch (SQLException error){
+        } catch (SQLException error) {
             JOptionPane.showMessageDialog(null, error.getMessage());
         }
         //Paso 7. Cerrar la conexión
@@ -110,6 +110,73 @@ public class CoderModel implements CRUD {
 
     @Override
     public boolean delete(Object obj) {
-        return false;
+        //1. Convertir el objeto a la entidad
+        Coder objCoder = (Coder) obj;
+
+        //2. Abrir la conexión
+        Connection objConnection = ConfigDB.openConnection();
+
+        //3. Crear una variable de estado
+        boolean isDeleted = false;
+
+        try {
+            //4. Escribir la sentencia SQL
+            String sql = "DELETE FROM coder WHERE id = ?;";
+            //5. Creamos el prepare statement
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+
+            //6.Dar valor al ?
+            objPrepare.setInt(1, objCoder.getId());
+
+            //7. Ejecutamos el Query (executeUpdate) devuelve el número de registros afectados
+            int totalAffectedRows = objPrepare.executeUpdate();
+
+            //Si las filas afectadas fueron mayor a cero quiere decir que si eliminó algo
+            if (totalAffectedRows > 0) {
+                isDeleted = true;
+                JOptionPane.showMessageDialog(null, "The update was successful.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        //8. Cerramos la conexión
+        ConfigDB.closeConnection();
+        return isDeleted;
+    }
+
+    public Coder findById(int id){
+        //1. Abrimos la conexion
+        Connection objConnection = ConfigDB.openConnection();
+        //2. Crear el coder que vamos retornar
+        Coder objCoder = null;
+
+        try {
+            //3. Sentencia SQL
+            String sql = "SELECT * FROM coder WHERE id = ?;";
+            //4. Preparamos el statement
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+
+            //5. Darle valor al paremetro del query
+            objPrepare.setInt(1,id);
+
+            //6. Ejecutamos el Query
+            ResultSet objResult = objPrepare.executeQuery();
+            if (objResult.next()){
+                objCoder = new Coder();
+                objCoder.setAge(objResult.getInt("age"));
+                objCoder.setName(objResult.getString("name"));
+                objCoder.setClan(objResult.getString("clan"));
+                objCoder.setId(objResult.getInt("id"));
+            }
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+
+        //7.Cerrar la conexión
+        ConfigDB.closeConnection();
+
+        return objCoder;
     }
 }
