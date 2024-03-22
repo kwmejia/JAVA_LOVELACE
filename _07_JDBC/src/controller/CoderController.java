@@ -64,26 +64,57 @@ public class CoderController {
         Coder objCoder = objCoderModel.findById(idDelete);
 
 
-        if (objCoder== null){
-            JOptionPane.showMessageDialog(null,"Coder not found");
-        }else {
-            int confirm = JOptionPane.showConfirmDialog(null,"Are you sure want  to delete the  coder ? \n"+ objCoder.toString());
+        if (objCoder == null) {
+            JOptionPane.showMessageDialog(null, "Coder not found");
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(null, "Are you sure want  to delete the  coder ? \n" + objCoder.toString());
 
             if (confirm == 0) objCoderModel.delete(objCoder);
 
         }
     }
 
-    public static void getByName(){
+    public static void getByName() {
         String name = JOptionPane.showInputDialog("Insert name ");
         CoderModel objModel = new CoderModel();
 
         String listaString = "COINCIDENCIAS \n";
-        for (Coder iterador: objModel.findByName(name)){
+        for (Coder iterador : objModel.findByName(name)) {
             listaString += iterador.toString() + "\n";
         }
 
         JOptionPane.showMessageDialog(null, listaString);
+
+    }
+
+    public static void update() {
+        //1. Utilizar el modelo
+        CoderModel objCoderModel = new CoderModel();
+
+        String listCoders = getAllString();
+
+        int idUpdate = Integer.parseInt(JOptionPane.showInputDialog(listCoders + "\nEnter the ID of the coder to edit: "));
+
+        //Obteniendo un coder por el id ingresado
+        Coder objCoder = objCoderModel.findById(idUpdate);
+
+        //Validamos que exista el coder
+        if (objCoder == null) {
+            JOptionPane.showMessageDialog(null, "Coder not found");
+        } else {
+            String name = JOptionPane.showInputDialog(null, "Enter new name: ", objCoder.getName());
+
+            //Para convertir un entero a String utilizamos String.valueOf()
+            int age = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter new age", String.valueOf(objCoder.getAge())));
+            String clan = JOptionPane.showInputDialog(null, "Enter new clan: ", objCoder.getClan());
+
+            objCoder.setName(name);
+            objCoder.setClan(clan);
+            objCoder.setAge(age);
+
+            objCoderModel.update(objCoder);
+
+        }
 
     }
 }

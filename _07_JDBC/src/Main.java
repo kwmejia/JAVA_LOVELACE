@@ -8,7 +8,7 @@ import javax.swing.*;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-
+        
         String option = "";
 
         do {
@@ -29,6 +29,10 @@ public class Main {
 
                 case "2":
                     CoderController.create();
+                    break;
+
+                case "3":
+                    CoderController.update();
                     break;
 
                 case "4":
